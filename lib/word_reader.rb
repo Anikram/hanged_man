@@ -14,18 +14,24 @@ class WordReader
   # Метод read_from_file, возвращающий случайное слово, прочитанное из файла,
   # имя которого нужно передать методу в качестве единственного аргумента.
   def read_from_file(file_name)
-    # Если файла не существует, сразу выходим из метода
-    is_exist?(file_name)
+    if !read_from_args
+      # Если файла не существует, сразу выходим из метода
+      is_exist?(file_name)
 
-    # Открываем файл, явно указывая его кодировку, читаем все строки в массив и
-    # закрываем файл.
-    file = File.new(file_name, "r:UTF-8")
-    lines = file.readlines
-    file.close
+      # Открываем файл, явно указывая его кодировку, читаем все строки в массив и
+      # закрываем файл.
+      file = File.new(file_name, "r:UTF-8")
+      lines = file.readlines
+      file.close
 
-    # Возвращаем случайную строчку (слово) из прочитанного массива, не забывая
-    # удалить в конце символ перевода строки методом chomp.
-    Unicode::upcase(lines.sample.chomp)
+      # Возвращаем случайную строчку (слово) из прочитанного массива, не забывая
+      # удалить в конце символ перевода строки методом chomp.
+      Unicode::upcase(lines.sample.chomp)
+    else
+      line = read_from_args
+      Unicode::upcase(line)
+    end
+
   end
 
   def is_exist?(file_name)

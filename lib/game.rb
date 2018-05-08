@@ -132,6 +132,10 @@ class Game
     end
 
     # После получения ввода, передаем управление в основной метод игры
-    next_step(Unicode::upcase(letter))
+    if letter
+      next_step(Unicode::upcase(letter))
+    else
+      next_step(letter)
+    end
   end
 end

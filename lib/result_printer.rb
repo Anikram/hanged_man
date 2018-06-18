@@ -24,14 +24,15 @@ class ResultPrinter
       # папке /image/ и называется 0.txt, 1.txt, 2.txt и т. д.
       file_name = current_path + "/../images/#{counter}.txt"
 
-      if File.exist?(file_name)
+      #if File.exist?(file_name)
+      begin
         # Ести такой файл существует, считываем его содержимое целиком и кладем
         # в массив одной большой строкой. Обратите внимание, что вторым
         # параметром при чтении мы явно указываем кодировку файла.
         file = File.new(file_name, "r:UTF-8")
         @status_image << file.read
         file.close
-      else
+      rescue Errno::ENOENT
         # Если файла нет, вместо соответствующей картинки будет «заглушка»
         @status_image << "\n [ изображение не найдено ] \n"
       end

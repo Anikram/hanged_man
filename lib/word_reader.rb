@@ -16,13 +16,20 @@ class WordReader
   def read_from_file(file_name)
     if !read_from_args
       # Если файла не существует, сразу выходим из метода
-      is_exist?(file_name)
+      #is_exist?(file_name)
 
       # Открываем файл, явно указывая его кодировку, читаем все строки в массив и
       # закрываем файл.
-      file = File.new(file_name, "r:UTF-8")
+      #
+      begin
+        file = File.new(file_name, "r:UTF-8")
+      rescue Errno::ENOENT
+        abort "Ошибка. Игра заверщена. Файл со словами не найден"
+      end
+
       lines = file.readlines
       file.close
+
 
       # Возвращаем случайную строчку (слово) из прочитанного массива, не забывая
       # удалить в конце символ перевода строки методом chomp.

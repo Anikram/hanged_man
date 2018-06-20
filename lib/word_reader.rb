@@ -41,7 +41,7 @@ class WordReader
 
   end
 
-  def is_exist?(file_name)
+  def exist?(file_name)
     nil if !File.exist?(file_name)
   end
 end

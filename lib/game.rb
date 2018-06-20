@@ -53,7 +53,7 @@ class Game
     MAX_ERRORS - @errors
   end
 
-  def is_good?(letter)
+  def good_letter?(letter)
     letters.include?(letter) ||
     (letter == 'Е' && letters.include?('Ё')) ||
     (letter == 'Ё' && letters.include?('Е')) ||
@@ -106,7 +106,7 @@ class Game
     # то ничего не изменилось, выходим из метода.
     return if repeated?(letter)
 
-    if is_good?(letter)
+    if good_letter?(letter)
       add_letter_to(@good_letters, letter)
 
       self.status = :won if solved?

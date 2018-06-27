@@ -33,5 +33,3 @@ bundle exec ruby ./visilitsa.rb
 *Для запуска необходим установленный интерпретатор Ruby не ниже 2.1.0*
 
 #### Разработал [Anikram](https://github.com:Anikram), 2018 год
- 
-#### Учебный проект [Goodprogrammer.ru](https://Goodprogrammer.ru)

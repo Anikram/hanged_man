@@ -1,101 +1,71 @@
-# encoding: utf-8
-#
-# Класс ResultPrinter, печатающий состояние и результаты игры. В этой версии
-# игры мы будем считывать картинки каждого из состояний виселицы из файлов в
-# папке image.
+# promoted to print out game's feedback
 class ResultPrinter
-  # В конструкторе мы прочитаем все изображения виселиц и запишем каждое из низ
-  # в отдельный элемент массива.
+  attr_accessor :game, :status_image
   def initialize(game)
-    # Создадим переменную экземпляра @status_image — массив, хранящий
-    # изображения виселиц.
+    @game = game
+    # array of images
     @status_image = []
-
-    # Сохраним текущее положение файла программы, чтобы с его помощью позже
-    # собрать путь к каждой картинке.
+    # full path for asset loading
     current_path = File.dirname(__FILE__)
-
-    # Создадим переменную для счетчика шагов в цикле
-    counter = 0
-
-    # В цикле прочитаем 7 файлов из папки image и запишем из содержимое в массив
-    while counter <= game.max_errors
-      # Соберем путь к файлу с изображением виселицы. Каждыый из них лежит в
-      # папке /image/ и называется 0.txt, 1.txt, 2.txt и т. д.
-      file_name = current_path + "/../images/#{counter}.txt"
-
-      #if File.exist?(file_name)
-      begin
-        # Ести такой файл существует, считываем его содержимое целиком и кладем
-        # в массив одной большой строкой. Обратите внимание, что вторым
-        # параметром при чтении мы явно указываем кодировку файла.
-        file = File.new(file_name, "r:UTF-8")
-        @status_image << file.read
-        file.close
-      rescue Errno::ENOENT
-        # Если файла нет, вместо соответствующей картинки будет «заглушка»
-        @status_image << "\n [ изображение не найдено ] \n"
-      end
-
-      counter += 1
-    end
+    # load images to array
+    load_images(current_path)
   end
 
-  # Метод print_viselitsa будет рисовать виселицу, соответствующую текущему
-  # количеству ошибок. Единственнй параметро этого метода — целое число errors.
+  # print image
   def print_viselitsa(errors)
-    # Так как ранее (в конструкторе) мы все картинки загрузили в массив
-    # @status_image, сейчас чтобы вывести на экран нужную виселицу, достаточно
-    # в качестве параметра puts указать нужный элемент этого массива.
     puts @status_image[errors]
   end
 
-  # Основной метод, печатающий состояния объекта класса Game, который нужно
-  # передать ему в качестве параметра.
   def print_status(game)
     cls
     puts game.version
+    puts "\nСлово: #{get_word_for_print(game.letters, game.good_letters)}"
+    puts "Ошибки: #{game.bad_letters.join(', ')}"
 
-    puts
-    puts "Слово: #{get_word_for_print(game.letters, game.good_letters)}"
-    puts "Ошибки: #{game.bad_letters.join(", ")}"
-
-    # Обратите внимание, что вызов метода print_viselitsa никак не поменялся,
-    # поменялась только его реализация.
     print_viselitsa(game.errors)
 
     if game.lost?
-      puts
-      puts "Вы проиграли :("
-      puts "Загаданное слово было: " + game.letters.join("")
-      puts
+      puts "\n\nВы проиграли :("
+      puts 'Загаданное слово было: ' + game.letters.join('')
     elsif game.won?
-      puts
-      puts "Поздравляем, вы выиграли!"
-      puts
+      puts "\n\nПоздравляем, вы выиграли!"
     else
-      puts "У вас осталось ошибок: #{game.errors_left}"
+      puts "\n\nУ вас осталось ошибок: #{game.errors_left}"
     end
   end
-
+  # print out game-word itself
   def get_word_for_print(letters, good_letters)
-    result = ""
-
-    for item in letters do
-      if good_letters.include?(item)
-        result += item + " "
-      else
-        result += "__ "
-      end
+    result = ''
+    letters.each do |item|
+      result += if good_letters.include?(item)
+                  item + ' '
+                else
+                  '__ '
+                end
     end
-
-    return result
+    result
   end
 
+  # clear screen for person-vs-person game, to hide a game-word.
   def cls
-    system("clear") || system("cls")
+    system('clear') || system('cls')
   end
 
-  # Обратите внимание, что без псевдографики класс ResultPrinter стал короче
-  # почти на 100 строк. Ещё раз напомним, что длинные строки в коде — это плохо!
+  def load_images(path)
+    counter = 0
+    until counter == game.max_errors
+      # assemble file path to /images/ folder
+      # img naming convention: 0.txt, 1.txt, 2.txt etc. 0,1,2 (errors number)
+      file_name = path + "/../images/#{counter}.txt"
+      begin
+        file = File.new(file_name, 'r:UTF-8')
+        status_image << file.read
+        file.close
+      rescue Errno::ENOENT
+        # placeholder if file doesn't exist
+        status_image << "\n [ изображение не найдено ] \n"
+      end
+      counter += 1
+    end
+  end
 end
